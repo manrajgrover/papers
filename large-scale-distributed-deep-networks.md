@@ -29,6 +29,10 @@
 
 ## Model Parallelism
 
+* User defines the computation at each node in each layer of model and messages (read gradients) that need to be passed in upward (feedforward) and downward (backprop) computation phase
+* Framework parallelizes computation in each machine and manages communication, synchronization and data transfer between machines during training and inference
+* Performance benefits depends on connectivity structure and computational needs
+
 ## Distributed Optimization Algorithms
 
 ## Experiments
