@@ -11,9 +11,9 @@
 * Data parallelism is achieved using model replicas
 * Two novel methods implemented:
 
-  1. Downpour SGD: Async stochastic gradient descent procedure with adaptive learning rates and supporting model replicas
+    1. Downpour SGD: Async stochastic gradient descent procedure with adaptive learning rates and supporting model replicas
 
-  2. Sandblaster L-BFGS: Distributed implementation of [L-BFGS](https://en.wikipedia.org/wiki/Limited-memory_BFGS)
+    2. Sandblaster L-BFGS: Distributed implementation of [L-BFGS](https://en.wikipedia.org/wiki/Limited-memory_BFGS)
 
 ## Previous Works
 
@@ -34,6 +34,29 @@
 * Performance benefits depends on connectivity structure and computational needs
 
 ## Distributed Optimization Algorithms
+
+### Downpour SGD
+
+1. Traditional SGD is inherently sequential which makes it impractical to apply to very large datasets
+2. Its an asynchronous stochastic gradient descent using multiple replicas of Single DistBelief model
+3. Divide dataset into subsets and run model on each subset
+4. Model communicate updates through centralized server which keep current state of all parameters for the model
+5. Asynchronous as both model and parameter shards run independently
+6. **Workflow**:
+    1. Model replica requests parameter server for updated copy of its model parameters
+    2. Processes a mini batch to calculate gradients and sends back to server
+    3. Server updates the parameters
+7. Communication overhead can be reduced by limiting rate at which parameters are requested and updated
+8. More robust compared to Synchronous SGD since if one machine fails, other models replicas continue processing
+9. Relaxing consistency requirements found to be effective
+10. Adaptive learning rate procedure greatly increases robustness
+11. Use of Adagrad:
+    1. Extends maximum number of model replicas that can work simultaneously
+    2. Combines with `warmstarting` with single model replica before unleashing others
+
+    This eliminates stability concerns in training.
+
+### Sandblaster L-BFGS
 
 ## Experiments
 
