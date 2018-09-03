@@ -58,6 +58,17 @@
 
 ### Sandblaster L-BFGS
 
+1. Key idea is distributed parameter storage and manipulation
+2. Provides implementation of L-BFGS
+3. **Workflow**:
+    1. Coordinator issues commands that can be performed by each parameter server shard independently 
+    2. Results and history cache stored locally in parameter server shard
+    3. This allows running large models without overhead of sending parameters and gradients to central server
+4. Load balancing scheme (similar to "backup tasks" in MapReduce):
+    1. Coordinator assigns each model replica small portion of work and assign replicas new work when they are free
+    2. Coordinator schedules multiple copies of the outstanding portions and uses result from fastest replica
+5. Contrast with Downpour SGD, Sandblaster only fetch parameters at the beginning of each batch and only send the gradients every few completed portions
+
 ## Experiments
 
 ## Conclusion
