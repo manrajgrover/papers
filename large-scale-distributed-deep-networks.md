@@ -68,7 +68,11 @@
     1. Coordinator assigns each model replica small portion of work and assign replicas new work when they are free
     2. Coordinator schedules multiple copies of the outstanding portions and uses result from fastest replica
 5. Contrast with Downpour SGD, Sandblaster only fetch parameters at the beginning of each batch and only send the gradients every few completed portions
+6. Its more efficient use of network bandwidth enables it to scale to a larger number of concurrent cores for training a single model
 
-## Experiments
+## Experiments and Conclusion
 
-## Conclusion
+1. Downpour SGD with Adagrad outperforms Downpour SGD with fixed learning rate and Sandblaster L-BFGS
+2. Based on trend it can be observed Sandblaster L-BFGS may outperform all if extremely large resource budget is used
+3. Downpour SGD works surprisingly well for nonconvex deep learning models with Adagrad
+4. It is conjectured that Adagrad automatically stabilizes volatile parameters in the face of the flurry of asynchronous updates, and naturally adjusts learning rates to the demands of different layers in the deep network
