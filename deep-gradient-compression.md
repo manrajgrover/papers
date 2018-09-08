@@ -21,3 +21,18 @@
     3. Results in no loss in accuracy
 
 ## Deep Gradient Compression
+
+### Gradient Sparsification
+
+1. Gradients larger than a threshold are transmitted to reduce bandwidth
+2. Rest of the gradients are accumulated locally
+3. These gradients become large enough to be transmitted over time
+4. Local gradient accumulation is equivalent to increasing batch size over time
+
+### Improving local gradient accumulation
+
+### Overcoming the stateless effect
+
+## Experiments and Results
+
+## Performance and Conclusion
