@@ -31,6 +31,18 @@
 
 ### Improving local gradient accumulation
 
+Momentum correction and local gradient clipping mitigate problem of accuracy loss brought in by sparse updates
+
+1. Momentum SGD:
+    1. Cannot directly be applied in place of vanilla SGD (ignores discounting factor between sparse update intervals) and leads to loss in convergence performance
+    2. When the gradient sparsity is high, the update interval dramatically increases, and thus the significant side effect will harm the model performance
+    2. To fix this, we locally accumulate the velocity instead of real gradient and the accumulated result is used for the subsequent sparsification and communication
+2. Local gradient clipping
+    1. Widely adopted to avoid exploding gradients
+    2. Rescales the gradients whenever the sum of their L2-norms exceeds a threshold
+    3. Accumulates gradients over iterations on each node independently and perform the gradient clipping locally before adding the current gradient to previous accumulation
+    4. Scaling the threshold by N^−1/2, the current node’s fraction of the global threshold if all N nodes had identical gradient distributions
+
 ### Overcoming the stateless effect
 
 ## Experiments and Results
