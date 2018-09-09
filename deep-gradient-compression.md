@@ -37,13 +37,29 @@ Momentum correction and local gradient clipping mitigate problem of accuracy los
     1. Cannot directly be applied in place of vanilla SGD (ignores discounting factor between sparse update intervals) and leads to loss in convergence performance
     2. When the gradient sparsity is high, the update interval dramatically increases, and thus the significant side effect will harm the model performance
     2. To fix this, we locally accumulate the velocity instead of real gradient and the accumulated result is used for the subsequent sparsification and communication
-2. Local gradient clipping
+2. Local gradient clipping:
     1. Widely adopted to avoid exploding gradients
     2. Rescales the gradients whenever the sum of their L2-norms exceeds a threshold
     3. Accumulates gradients over iterations on each node independently and perform the gradient clipping locally before adding the current gradient to previous accumulation
-    4. Scaling the threshold by N^−1/2, the current node’s fraction of the global threshold if all N nodes had identical gradient distributions
+    4. Scaling the threshold by `N^−1/2`, the current node’s fraction of the global threshold if all `N` nodes had identical gradient distributions
 
 ### Overcoming the stateless effect
+
+1. Updating of small gradients are stale and outdated
+2. Staleness can slow down convergence and degrade model performance
+
+Momentum factor masking and warm-up training mitigate staleness
+
+1. Momentum Factor Masking:
+    1. Instead of searching for a new momentum coefficient (suggested in previous works), we simply apply the same mask to both the accumulated gradients and the momentum factor
+    2. Mask stops the momentum for delayed gradients, preventing the stale momentum from carrying the weights in the wrong direction
+
+2. Warm-up Training
+    1. Gradients are more diverse and aggressive in early stages of training and sparsifying them limits the range of variation of the model
+    2. The remaining accumulated gradients may outweigh the latest gradients and misguide the optimization direction
+    3. Using less aggressive learning rate helps slow down the changing speed of the neural network at the start of training
+    4. Less aggressive gradient sparsity helps reduce the number of extreme gradients being delayed
+    5. Exponentially increasing the gradient sparsity helps the training adapt to the gradients of larger sparsity
 
 ## Experiments and Results
 
