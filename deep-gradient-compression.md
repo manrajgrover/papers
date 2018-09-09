@@ -76,3 +76,7 @@ Momentum factor masking and warm-up training mitigate staleness
     2. The model trained with Deep Gradient Compression gains better recognition ability on both clean and noisy speech, even when gradients size is compressed by 608×
 
 ## Performance and Conclusion
+
+1. Hierarchically calculating the threshold significantly reduces top-k selection time for gradients
+2. Deep Gradient Compression benefits even more when the communication-to-computation ratio of the model is higher and the network bandwidth is lower
+3. Deep Gradient Compression (DGC) compresses the gradient by 270-600× for a wide range of CNNs and RNNs
