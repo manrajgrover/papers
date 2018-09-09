@@ -63,4 +63,16 @@ Momentum factor masking and warm-up training mitigate staleness
 
 ## Experiments and Results
 
+1. Image classification tasks
+    1. Learning curve of Gradient Dropping is worse than the baseline due to gradient staleness
+    2. With momentum correction, the learning curve converges slightly faster, and the accuracy is much closer to the baseline
+    3. With momentum factor masking and warm-up training techniques, gradient staleness is eliminated and the learning curve closely follows the baseline
+    4. Deep Gradient Compression gives 75× better compression than Terngrad with no loss of accuracy. For ResNet-50, the compression ratio is slightly lower (277× vs. 597×) with a slight increase in accuracy
+2. Language modeling
+    1. For language modeling, the training loss with Deep Gradient Compression closely match the baseline, so does the validation perplexity
+    2. Deep Gradient Compression compresses the gradient by 462× with a slight reduction in perplexity
+3. Speech recognition
+    1. The learning curves show the same improvement acquired from techniques in Deep Gradient Compression as for the image network
+    2. The model trained with Deep Gradient Compression gains better recognition ability on both clean and noisy speech, even when gradients size is compressed by 608×
+
 ## Performance and Conclusion
