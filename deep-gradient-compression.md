@@ -3,13 +3,13 @@
 ## Introduction
 
 * Gradient exchange is costly and dwarfs saving of computation time
-* Network bandwidth becomes bottleneck for scaling up distributed training, even worse on mobiles (federated learning)
+* Network bandwidth becomes a bottleneck for scaling up distributed training, even worse on mobiles (federated learning)
 * Deep Gradient Compression (DGC) solves the communication bandwidth problem by compressing the gradients
 
 ## Related Work
 
 1. Async SGD accelerates the training by removing synchronization and updating params immediately once node completes backprop
-2. Gradient Quantization to low precision values can reduce communication bandwidth (1-bit SGD, QSGD and TernGrad). DoReFa-Net uses 1-bit weights with 2-bit gradients
+2. Gradient Quantization to low precision values can reduce communication bandwidth (1-bit SGD, QSGD, and TernGrad). DoReFa-Net uses 1-bit weights with 2-bit gradients
 3. Gradient Sparsification can be done in many ways:
     1. Threshold quantization to send gradients larger than predefined constant
     2. Choose a fixed proportion of positive and negative gradient updates
@@ -31,10 +31,10 @@
 
 ### Improving local gradient accumulation
 
-Momentum correction and local gradient clipping mitigate problem of accuracy loss brought in by sparse updates
+Momentum correction and local gradient clipping mitigate the problem of accuracy loss brought in by sparse updates
 
 1. Momentum SGD:
-    1. Cannot directly be applied in place of vanilla SGD (ignores discounting factor between sparse update intervals) and leads to loss in convergence performance
+    1. Cannot directly be applied in place of vanilla SGD (ignores discounting factor between sparse update intervals) and leads to the loss in convergence performance
     2. When the gradient sparsity is high, the update interval dramatically increases, and thus the significant side effect will harm the model performance
     2. To fix this, we locally accumulate the velocity instead of real gradient and the accumulated result is used for the subsequent sparsification and communication
 2. Local gradient clipping:
@@ -55,7 +55,7 @@ Momentum factor masking and warm-up training mitigate staleness
     2. Mask stops the momentum for delayed gradients, preventing the stale momentum from carrying the weights in the wrong direction
 
 2. Warm-up Training
-    1. Gradients are more diverse and aggressive in early stages of training and sparsifying them limits the range of variation of the model
+    1. Gradients are more diverse and aggressive in the early stages of training and sparsifying them limits the range of variation of the model
     2. The remaining accumulated gradients may outweigh the latest gradients and misguide the optimization direction
     3. Using less aggressive learning rate helps slow down the changing speed of the neural network at the start of training
     4. Less aggressive gradient sparsity helps reduce the number of extreme gradients being delayed
@@ -64,7 +64,7 @@ Momentum factor masking and warm-up training mitigate staleness
 ## Experiments and Results
 
 1. Image classification tasks
-    1. Learning curve of Gradient Dropping is worse than the baseline due to gradient staleness
+    1. The learning curve of Gradient Dropping is worse than the baseline due to gradient staleness
     2. With momentum correction, the learning curve converges slightly faster, and the accuracy is much closer to the baseline
     3. With momentum factor masking and warm-up training techniques, gradient staleness is eliminated and the learning curve closely follows the baseline
     4. Deep Gradient Compression gives 75× better compression than Terngrad with no loss of accuracy. For ResNet-50, the compression ratio is slightly lower (277× vs. 597×) with a slight increase in accuracy
